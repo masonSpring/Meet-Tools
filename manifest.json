@@ -1,0 +1,19 @@
+{
+  "name": "Meet Tools",
+  "version": "1.1",
+  "description": "couple of useful things",
+  "manifest_version": 2,
+  "permissions": [
+    "storage", "tabs"
+  ],
+  "content_scripts": [{
+    "matches": [
+      "https://meet.google.com/*"
+    ],
+    "js": ["content.js", "captions.js"]
+  }],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  }
+}
