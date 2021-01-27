@@ -12,6 +12,9 @@
     ],
     "js": ["content.js", "captions.js"]
   }],
+  "browser_action": {
+    "default_popup": "options.html"
+},
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false
