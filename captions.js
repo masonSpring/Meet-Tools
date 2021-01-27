@@ -23,7 +23,7 @@ function readCaption() {
         caption += captionArr[x].innerText + " ";
     }
     shortloop = true;
-    forLoop:
+    captionLoop:
     for (let y = 0; y < include.length; y += 1) {
         if (caption.toLowerCase().includes(include[y])) {
             shortloop = false;
@@ -32,7 +32,7 @@ function readCaption() {
                 for (let z = 0; z < exclude.length; z += 1){
                     if(caption.toLowerCase().includes(exclude[z])){
                         setTimeout(readCaption, 1000);
-                        break forLoop;
+                        break captionLoop;
                     }
                 }
             }

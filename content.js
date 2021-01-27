@@ -25,10 +25,15 @@ function meetTools(oldCount) {
             if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) {
                 document.getElementsByClassName("I5fjHe wb61gb")[1].click()
             }
-            if (document.getElementsByClassName("e19J0b CeoRYc")[3] == undefined) {
-                if (autojoin == true) {
-                    document.getElementsByClassName("e19J0b CeoRYc")[0].click();
-                }
+            let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac");
+            joinLoop:
+            for (i=0; i<possibleJoinButton.length; i++) {
+                if (possibleJoinButton[i].innerHTML == "Join now") {
+                    if (autojoin == true) {
+                        possibleJoinButton[i].click();
+                        break joinLoop;
+                    } 
+                } 
             }
             setTimeout(function () {
                 meetTools(0);
