@@ -5,13 +5,15 @@ function save_options() {
     var optionsExclude = document.getElementById('options-exclude').value;
     var optionsWebhook = document.getElementById('options-webhook').value;
     var optionsPing = document.getElementById('options-ping').value;
+    var optionsRefreshInterval = document.getElementById('options-refresh-interval').value;
     chrome.storage.sync.set({
         automute: optionsAutomute,
         autojoin: optionsAutojoin,
         include: optionsInclude,
         exclude: optionsExclude,
         webhook: optionsWebhook,
-        ping: optionsPing
+        ping: optionsPing,
+        refreshInterval: optionsRefreshInterval
     }, function() {
       // Update status to let user know options were saved.
       var status = document.getElementById('status');
@@ -31,7 +33,8 @@ function restore_options() {
       include: "",
       exclude: "",
       ping: "",
-      webhook: ""
+      webhook: "",
+      refreshInterval: "15000"
     }, function(items) {
       document.getElementById('options-automute').checked = items.automute;
       document.getElementById('options-autojoin').checked = items.autojoin;
@@ -39,8 +42,10 @@ function restore_options() {
       document.getElementById("options-exclude").value = items.exclude;
       document.getElementById("options-ping").value = items.ping;
       document.getElementById("options-webhook").value = items.webhook;
+      document.getElementById("options-refresh-interval").value = items.refreshInterval;
     });
   }
   document.addEventListener('DOMContentLoaded', restore_options);
   document.getElementById('save').addEventListener('click',
       save_options);
+

@@ -18,25 +18,28 @@ chrome.storage.sync.get({
 
 function readCaption(){
     //generate caption text
-    let captionArr = document.getElementsByClassName('CNusmb')
-    let caption = ""
+    let captionArr = document.getElementsByClassName('CNusmb');
+    let caption = "";
     for (let x = 0; x < captionArr.length; x += 1) {
-        caption += captionArr[x].innerText + " "
+        caption += captionArr[x].innerText + " ";
     }
-    shortloop = true
+    shortloop = true;
+    forLoop:
     for (let y = 0; y < include.length; y += 1){
     if (caption.toLowerCase().includes(include[y])) {
-        shortloop = false
+        console.log("included");
+        shortloop = false;
         for (let z = 0; z < exclude.length; z += 1){
             if(caption.toLowerCase().includes(exclude[z])){
-                setTimeout(readCaption, 1000)
+                setTimeout(readCaption, 1000);
+                break forLoop;
             }
         }
         let request = new XMLHttpRequest();
         request.open("POST", webhook);
         request.setRequestHeader('Content-type', 'application/json');
 
-        let captionEmbed = { "title" : "Caption Text", "description" : caption}
+        let captionEmbed = { "title" : "Caption Text", "description" : caption};
 
         let params = {
             "content": "<@"+ping+">",
@@ -44,19 +47,16 @@ function readCaption(){
             username: document.getElementsByClassName('zs7s8d jxFHg')[document.getElementsByClassName('zs7s8d jxFHg').length - 1].innerText,
             avatar_url: document.getElementsByClassName('KpxDtd r6DyN')[document.getElementsByClassName('KpxDtd r6DyN').length - 1].src
         }
+        console.log("sent");
 
-
-
-            request.send(JSON.stringify(params));
-
-        
-        
-            setTimeout(readCaption, 15000)
-        
+        request.send(JSON.stringify(params));
+        break forLoop;
     }
     }
     if(shortloop == true){
-        setTimeout(readCaption, 1000)
+        setTimeout(readCaption, 1000);
+    } else {
+        setTimeout(readCaption, 15000);
     }
 }
 
