@@ -3,20 +3,20 @@ chrome.storage.sync.get({
     exclude: "",
     ping: "",
     webhook: ""
-  }, function(items) {
+}, function (items) {
     include = items.include.replace(/\s/g, '').toLowerCase().split(',');
     exclude = items.exclude.replace(/\s/g, '').toLowerCase().split(',');
     webhook = items.webhook;
     ping = items.ping;
-    if(webhook != ""){
+    if (webhook != "") {
         readCaption()
-    }    
-  });
+    }
+});
 
 
 
 
-function readCaption(){
+function readCaption() {
     //generate caption text
     let captionArr = document.getElementsByClassName('CNusmb');
     let caption = "";
@@ -25,38 +25,40 @@ function readCaption(){
     }
     shortloop = true;
     forLoop:
-    for (let y = 0; y < include.length; y += 1){
-    if (caption.toLowerCase().includes(include[y])) {
-        console.log("included");
-        shortloop = false;
-        for (let z = 0; z < exclude.length; z += 1){
-            if(caption.toLowerCase().includes(exclude[z])){
-                setTimeout(readCaption, 1000);
+        for (let y = 0; y < include.length; y += 1) {
+            if (caption.toLowerCase().includes(include[y])) {
+                console.log("included");
+                shortloop = false;
+                for (let z = 0; z < exclude.length; z += 1) {
+                    if (caption.toLowerCase().includes(exclude[z])) {
+                        setTimeout(readCaption, 1000);
+                        break forLoop;
+                    }
+                }
+                let request = new XMLHttpRequest();
+                request.open("POST", webhook);
+                request.setRequestHeader('Content-type', 'application/json');
+
+                let captionEmbed = {
+                    "title": "Caption Text",
+                    "description": caption
+                };
+
+                let params = {
+                    "content": "<@" + ping + ">",
+                    embeds: [captionEmbed],
+                    username: document.getElementsByClassName('zs7s8d jxFHg')[document.getElementsByClassName('zs7s8d jxFHg').length - 1].innerText,
+                    avatar_url: document.getElementsByClassName('KpxDtd r6DyN')[document.getElementsByClassName('KpxDtd r6DyN').length - 1].src
+                }
+                console.log("sent");
+
+                request.send(JSON.stringify(params));
                 break forLoop;
             }
         }
-        let request = new XMLHttpRequest();
-        request.open("POST", webhook);
-        request.setRequestHeader('Content-type', 'application/json');
-
-        let captionEmbed = { "title" : "Caption Text", "description" : caption};
-
-        let params = {
-            "content": "<@"+ping+">",
-            embeds: [ captionEmbed ],
-            username: document.getElementsByClassName('zs7s8d jxFHg')[document.getElementsByClassName('zs7s8d jxFHg').length - 1].innerText,
-            avatar_url: document.getElementsByClassName('KpxDtd r6DyN')[document.getElementsByClassName('KpxDtd r6DyN').length - 1].src
-        }
-        console.log("sent");
-
-        request.send(JSON.stringify(params));
-        break forLoop;
-    }
-    }
-    if(shortloop == true){
+    if (shortloop == true) {
         setTimeout(readCaption, 1000);
     } else {
         setTimeout(readCaption, 15000);
     }
 }
-
