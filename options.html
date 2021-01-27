@@ -6,8 +6,9 @@
 </head>
 
 <body>
+    <h1>Meet Tools Options</h1>
 
-    <h3>Auto Join Settings</h3><br>
+    <h3>Auto Join Settings</h3>
     <label>
         <input type="checkbox" id="options-automute">
         Auto Mute/Hide Camera
@@ -18,7 +19,11 @@
         Auto Join
     </label>
     <br>
-    <h3>Captions Ping Settings</h3><br>
+    <label>
+        <input type="text" id="options-refresh-interval">
+        Refresh Interval (in ms)
+    </label><br>
+    <h3>Captions Ping Settings</h3>
     <label>
         <input type="text" id="options-include">
         Include (Separate with Comma)
@@ -38,10 +43,7 @@
         <input type="text" id="options-webhook">
         Discord Webhook URL
     </label>
-    <label>
-        <input type="text" id="options-refresh-interval">
-        Refresh Interval (in ms)
-    </label>
+
 
 
     <div id="status"></div>
