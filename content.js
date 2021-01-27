@@ -45,7 +45,7 @@ function meetTools(oldCount) {
     }
     var newCount = parseInt(document.getElementsByClassName('wnPUne N0PJ8e')[0].innerText)
     console.log(oldCount, newCount)
-    if (newCount < oldCount - 5 || newCount <= oldCount / 2) {
+    if (newCount < oldCount - 3 || newCount <= oldCount / 4) {
       console.log("Close!")
       chrome.runtime.sendMessage({
         closeThis: true
