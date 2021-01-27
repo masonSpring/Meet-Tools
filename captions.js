@@ -24,15 +24,18 @@ function readCaption() {
     }
     shortloop = true;
     forLoop:
-    for (let y = 0; y < include.length; y += 1){
-    if (caption.toLowerCase().includes(include[y])) {
-        shortloop = false;
-        for (let z = 0; z < exclude.length; z += 1){
-            if(caption.toLowerCase().includes(exclude[z])){
-                setTimeout(readCaption, 1000);
-                break forLoop;
+    for (let y = 0; y < include.length; y += 1) {
+        if (caption.toLowerCase().includes(include[y])) {
+            shortloop = false;
+
+            if (exclude != "") {
+                for (let z = 0; z < exclude.length; z += 1){
+                    if(caption.toLowerCase().includes(exclude[z])){
+                        setTimeout(readCaption, 1000);
+                        break forLoop;
+                    }
+                }
             }
-        }
             if (webhook != "") {
                 let request = new XMLHttpRequest();
                 request.open("POST", webhook);
@@ -60,7 +63,7 @@ function readCaption() {
             }
     
             break forLoop;
-      }
+        }
     }
     if(shortloop == true){
         setTimeout(readCaption, 1000);
