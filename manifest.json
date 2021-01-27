@@ -4,17 +4,23 @@
   "description": "couple of useful things",
   "manifest_version": 2,
   "permissions": [
-    "storage", "tabs"
+    "storage",
+    "tabs"
   ],
-  "content_scripts": [{
-    "matches": [
-      "https://meet.google.com/*"
-    ],
-    "js": ["content.js", "captions.js"]
-  }],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://meet.google.com/*"
+      ],
+      "js": [
+        "content.js",
+        "captions.js"
+      ]
+    }
+  ],
   "browser_action": {
     "default_popup": "options.html"
-},
+  },
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false
