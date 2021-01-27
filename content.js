@@ -14,24 +14,26 @@ function meetTools(oldCount) {
              document.getElementsByClassName("VfPpkd-vQzf8d")[0].click();
         }
         // -1 oldCount means meet does not exist
-        else if (document.getElementsByClassName("e19J0b CeoRYc")[0] == undefined) {
+        else if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) {
             setTimeout(function () {
                 meetTools(-1);
             }, refreshInterval)
         }
         else {
             if(document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true){
-                document.getElementsByClassName("I5fjHe wb61gb")[0].click()
+                  document.getElementsByClassName("I5fjHe wb61gb")[0].click()
             }
             if(document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true){
-                document.getElementsByClassName("I5fjHe wb61gb")[1].click()
+                  document.getElementsByClassName("I5fjHe wb61gb")[1].click()
             }
-            if(autojoin == true){
-                document.getElementsByClassName("e19J0b CeoRYc")[0].click();
+            if (document.getElementsByClassName("e19J0b CeoRYc")[3] == undefined) {
+              if(autojoin == true){
+                  document.getElementsByClassName("e19J0b CeoRYc")[0].click();
+              }
             }
-        setTimeout(function () {
-            meetTools(0);
-        }, 1000)
+            setTimeout(function () {
+                meetTools(0);
+            }, 1000)
         }
     }
     else{
