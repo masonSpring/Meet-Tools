@@ -7,7 +7,7 @@ function save_options() {
   var optionsPing = document.getElementById('options-ping').value;
   var optionsRefreshInterval = document.getElementById('options-refresh-interval').value;
   var optionsHAHook = document.getElementById('options-hahook').value;
-  var optionsAutorecord = document.getElementById('options-autorecord').value;
+  var optionsAutorecord = document.getElementById('options-autorecord').checked;
   chrome.storage.sync.set({
     automute: optionsAutomute,
     autojoin: optionsAutojoin,
@@ -50,7 +50,7 @@ function restore_options() {
     document.getElementById("options-webhook").value = items.webhook;
     document.getElementById("options-hahook").value = items.haHook;
     document.getElementById("options-refresh-interval").value = items.refreshInterval;
-    document.getElementById("options-autorecord").value = items.autorecord;
+    document.getElementById("options-autorecord").checked = items.autorecord;
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
