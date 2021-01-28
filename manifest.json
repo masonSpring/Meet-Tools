@@ -1,6 +1,6 @@
 {
   "name": "Meet Tools",
-  "version": "1.4.2",
+  "version": "1.4.4",
   "description": "Semi-automatic Google Meet management",
   "manifest_version": 2,
   "permissions": [
@@ -24,7 +24,8 @@
         "content.js",
         "captions.js",
         "recorder.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
   ],
   "page_action": {},
