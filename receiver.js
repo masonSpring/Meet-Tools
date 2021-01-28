@@ -1,97 +1,100 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+var micEnabled = new MediaStream(); // Set micEnabled variable to be accessible elsewhere.
+var recordedChunks = []; // Create global variable for recording.
+const recordOptions = { mimeType: 'video/webm;codecs=vp9' }; // Set recording to webm.
+var url = ""; // Create global variable for recording URL.
 
-// Note: |window.currentStream| was set in background.js.
-
-// Stop video play-out, stop the MediaStreamTracks, and set style class to
-// "shutdown".
-
-var micEnabled = new MediaStream();
-var recordedChunks = [];
-const recordOptions = {mimeType: 'video/webm;codecs=vp9'};
-var url = "";
-
-function handleDataAvailable(event) {
-  if (event.data.size > 0) {
-    recordedChunks.push(event.data);
-  } else {
-    // ...
+function handleDataAvailable(event) { // When recorded data is available
+  if (event.data.size > 0) { // If data is more than 0:
+    recordedChunks.push(event.data);  // Add data to recorded chunks.
   }
 }
 
-function download() {
-  var blob = new Blob(recordedChunks, {
+// From RecordRTC, makes webm seekable
+function getSeekableBlob(inputBlob, callback) {
+    // EBML.js copyrights goes to: https://github.com/legokichi/ts-ebml
+    if (typeof EBML === 'undefined') {
+        throw new Error('Please link: https://cdn.webrtc-experiment.com/EBML.js');
+    }
+    var reader = new EBML.Reader();
+    var decoder = new EBML.Decoder();
+    var tools = EBML.tools;
+    var fileReader = new FileReader();
+    fileReader.onload = function(e) {
+        var ebmlElms = decoder.decode(this.result);
+        ebmlElms.forEach(function(element) {
+            reader.read(element);
+        });
+        reader.stop();
+        var refinedMetadataBuf = tools.makeMetadataSeekable(reader.metadatas, reader.duration, reader.cues);
+        var body = this.result.slice(reader.metadataSize);
+        var newBlob = new Blob([refinedMetadataBuf, body], {
+            type: 'video/webm'
+        });
+        callback(inputBlob);
+    };
+    fileReader.readAsArrayBuffer(inputBlob);
+}
+
+function download() { // Download file.
+  var blob = new Blob(recordedChunks, { // Create webm blob out of all the segments.
     type: 'video/webm'
   });
-  url = URL.createObjectURL(blob);
-  chrome.runtime.sendMessage({download: true});
-  //window.URL.revokeObjectURL(url);
+  getSeekableBlob(blob, function (blob) {
+    url = URL.createObjectURL(blob); // Create URL for blob.
+    chrome.runtime.sendMessage({ download: true }); // Tell background script to download.
+  });
 }
 
-function tabClose() {
-  var player = document.getElementById('player');
-  player.srcObject = null;
-  var tracks = currentStream.getTracks();
-  for (var i = 0; i < tracks.length; ++i) {
-    tracks[i].stop();
+function tabClose() { // Kills streams.
+  var player = document.getElementById('player'); // Get audio player.
+  player.srcObject = null; // Unset audio player source.
+  var tracks = currentStream.getTracks(); // Get all tracks.
+  for (var i = 0; i < tracks.length; ++i) { // For all tracks:
+    tracks[i].stop(); // Stop track.
   }
-  stream = null;
+  stream = null; // Kill stream.
 }
 
-function shutdownReceiver() {
-  //if (!currentStream) {
-  //return;
-  //}
-  tabClose();
-  
-  
-  download();
+function shutdownReceiver() { // Shutdown recording.
+  tabClose(); // Kill streams.
+  download(); // Download file.
 }
 
-function play(stream) {
-  var player = document.getElementById('player');
-  player.addEventListener('canplay', function() {
-    this.volume = 0.75;
-    this.muted = false;
-    this.play();
+function play(stream) { // Play stream.
+  var player = document.getElementById('player'); // Get player.
+  player.addEventListener('canplay', function () { // When player is ready to play:
+    this.volume = 1.00; // Set volume to full.
+    this.muted = false; // Unmute.
+    this.play(); // Play.
   });
-  player.setAttribute('controls', '1');
-  player.srcObject = currentStream;
-  
-  
-  mediaRecorder = new MediaRecorder(stream, recordOptions);
-  mediaRecorder.ondataavailable = handleDataAvailable;
-  mediaRecorder.start(3000);
-  document.getElementById("download").addEventListener("click", function() {
-    download();
+  player.setAttribute('controls', '1'); // Enable player controls.
+  player.srcObject = currentStream; // Set player to play audio stream from meet.
+
+  mediaRecorder = new MediaRecorder(stream, recordOptions); // Create recorder object.
+  mediaRecorder.ondataavailable = handleDataAvailable; // Set recorder data handler function.
+  mediaRecorder.start(3000); // Start recording while saving to data handler function every 3 seconds.
+  document.getElementById("download").addEventListener("click", function () { // When download button is clicked:
+    download(); // Download.
   });
-  // Add onended event listeners. This detects when tab capture was shut down by
-  // closing the tab being captured.
-  var tracks = currentStream.getTracks();
-  for (var i = 0; i < tracks.length; ++i) {
-    tracks[i].addEventListener('ended', function() {
-      console.log('MediaStreamTrack[' + i + '] ended, shutting down...');
-      mediaRecorder.stop();
-      shutdownReceiver();
+  var tracks = currentStream.getTracks(); // Get all streams from meet.
+  for (var i = 0; i < tracks.length; ++i) { // For each stream:
+    tracks[i].addEventListener('ended', function () { // When stream ends:
+      mediaRecorder.stop(); // Stop recording.
+      shutdownReceiver(); // Start recorder shutdown process.
     });
   }
 }
 
-window.addEventListener('load', function() {
-  // Start video play-out of the captured audio/video MediaStream once the page
-  // has loaded.
-  
-  navigator.mediaDevices.getUserMedia({ audio: true }).then((mic) => {
-    micEnabled = mic;
-    window.currentStream.width = screen.width;
-    window.currentStream.height = screen.height;
-    let mixer = new MultiStreamsMixer([window.currentStream, mic]);
-    console.log(mixer.getMixedStream());
-    mixer.frameInterval = 1;
-    mixer.startDrawingFrames();
-    play(mixer.getMixedStream());
+window.addEventListener('load', function () { // When this page loads:
+  navigator.mediaDevices.getUserMedia({ audio: true }).then((mic) => { // Get user mic input.
+    micEnabled = mic; // Set global micEnabled object earlier to user mic input.
+    window.currentStream.width = screen.width; // Set record width to user's screen's width.
+    window.currentStream.height = screen.height; // Set record height to user's screen's height.
+    let mixer = new MultiStreamsMixer([window.currentStream, mic]); // Create stream mixer to mix user mic and meet.
+    mixer.frameInterval = 1; // Set frame interval.
+    mixer.startDrawingFrames(); // Start video stream.
+    play(mixer.getMixedStream()); // Start playback and recording.
   });
 });
-// Shutdown when the receiver page is closed.
-window.addEventListener('beforeunload', tabClose);
+
+window.addEventListener('beforeunload', tabClose); // When page is closed, kill all streams.
