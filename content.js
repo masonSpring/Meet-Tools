@@ -1,4 +1,4 @@
-chrome.storage.sync.get({
+chrome.storage.sync.get({ // Get all relevant settings. 
   automute: true,
   autojoin: true,
   refreshInterval: ""
@@ -8,57 +8,65 @@ chrome.storage.sync.get({
   refreshInterval = items.refreshInterval;
 });
 
-function meetTools(oldCount) {
-  if (document.getElementsByClassName("I98jWb")[0] == undefined) {
-    if (oldCount == -1) {
-      document.getElementsByClassName("VfPpkd-vQzf8d")[0].click();
-    }
-    // -1 oldCount means meet does not exist
-    else if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) {
-      setTimeout(function () {
-        meetTools(-1);
+function meetTools(oldCount) { // Checks current status of Meet.
+  if (document.getElementsByClassName("I98jWb")[0] == undefined) { // Does the "show/hide captions" button not exist? If so, meet is not joined.
+    if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) { // Does the "Refresh" button exist? If so then the meet does not yet exist.
+      setTimeout(function () { // Click the "Refresh" button after waiting a certain amount of time (set in settings).
+        document.getElementsByClassName("VfPpkd-vQzf8d")[0].click();
       }, refreshInterval)
-    } else {
-      if (document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true) {
-        document.getElementsByClassName("I5fjHe wb61gb")[0].click()
-      }
-      if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) {
-        document.getElementsByClassName("I5fjHe wb61gb")[1].click()
-      }
-      let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac");
-      joinLoop:
-      for (i = 0; i < possibleJoinButton.length; i++) {
-        if (possibleJoinButton[i].innerHTML == "Join now") {
-          if (autojoin == true) {
-            possibleJoinButton[i].click();
-            break joinLoop;
+    } else { // Meet exists but is not yet joined.
+      try {
+
+        let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac"); // Finds the possiblities for a "Join" button.
+        joinLoop:
+        for (i = 0; i < possibleJoinButton.length; i++) { // Checks each possibility to see if it is actually a "Join" button.
+          if (possibleJoinButton[i].innerHTML == "Join now") { // Found "Join" button. Join page fully loaded.
+            
+            chrome.runtime.sendMessage({ // Tell background script to focus tab.
+              focusThis: true
+            });
+
+            if (document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find mute button.
+              console.log("Automuting...")
+              document.getElementsByClassName("I5fjHe wb61gb")[0].click() // Click mute button.
+            }
+
+            if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find camera button.
+              console.log("Auto-disabling camera...")
+              document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Click camera button.
+            }
+
+            if (autojoin) { // Is autojoin enabled?
+              console.log("Autojoining...")
+              possibleJoinButton[i].click(); // Click join button.
+            }
+
+            break joinLoop; // Don't keep looking for buttons.
           }
         }
+        setTimeout(meetTools, 1000) // No join button found or autojoin is disabled, recheck in a second.
+      } catch (error) {
+        setTimeout(meetTools, 1000);
       }
-      setTimeout(function () {
-        meetTools(0);
-      }, 1000)
     }
-  } else {
-    if (document.getElementsByClassName("I98jWb")[0].innerText != "Turn off captions") {
-      document.getElementsByClassName("I98jWb")[0].click()
+  } else { // Meet is active.
+    if (document.getElementsByClassName("I98jWb")[0].innerText != "Turn off captions") { // Find button to turn on captions.
+      console.log("Auto enabling captions...")
+      document.getElementsByClassName("I98jWb")[0].click() // Turn on captions.
     }
-    var newCount = parseInt(document.getElementsByClassName('wnPUne N0PJ8e')[0].innerText)
-    if (newCount < oldCount - 3 || newCount <= oldCount * 0.75) {
-      chrome.runtime.sendMessage({
+    var newCount = parseInt(document.getElementsByClassName('wnPUne N0PJ8e')[0].innerText) // Find current number of members in meet.
+    if (newCount < oldCount - 3 || newCount <= oldCount * 0.75) { // Autoleave logic: If 4 people or 1/4 of the meet leave, then leave.
+      console.log("Autoleaving...")
+      chrome.runtime.sendMessage({ // Tell background script to close tab.
         closeThis: true
       });
-      document.getElementsByClassName("I5fjHe wb61gb")[1].click()
-    } else {
-      setTimeout(function () {
-        meetTools(newCount);
-      }, 5000)
+      document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Fallback to click disconnect button if tab does not close.
+    } else { // It is not time to leave yet.
+      setTimeout(meetTools, 5000, newCount); // Check every 5 seconds.
     }
   }
 }
-// Your code here...
-window.addEventListener('load', function () {
-  setTimeout(function () {
-    meetTools(0);
-  }, 1000)
+
+window.addEventListener('load', function () { // On page load, start main function after 1 second.
+  setTimeout(meetTools, 1000);
 }, false);
