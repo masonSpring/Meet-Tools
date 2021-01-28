@@ -25,6 +25,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       chrome.pageAction.onClicked.addListener(function (tab) {
         if (sender.tab.id == tab.id) {
           record();
+          chrome.pageAction.hide(sender.tab.id);
         }
       });
     }
