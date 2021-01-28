@@ -1,11 +1,15 @@
 chrome.storage.sync.get({ // Get all relevant settings. 
   automute: true,
   autojoin: true,
-  refreshInterval: ""
+  refreshInterval: "",
+  autoleave: true,
+  autobreakout: true
 }, function (items) {
   automute = items.automute;
   autojoin = items.autojoin;
   refreshInterval = items.refreshInterval;
+  autoleave = items.autoleave;
+  autobreakout = items.autobreakout;
 });
 
 function meetTools(oldCount) { // Checks current status of Meet.
@@ -56,7 +60,7 @@ function meetTools(oldCount) { // Checks current status of Meet.
     }
 
     //check for breakout
-    if (document.getElementsByClassName("PNenzf").length > 0) { //if popup box exists
+    if (document.getElementsByClassName("PNenzf").length > 0 && autobreakout == true) { //if popup box exists
       for (x = 0; x < document.getElementsByClassName("RveJvd snByac").length; x++) { //Iterates through list of clickable buttons
         if (document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Join") || document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Return to the main call")) { //if button is "Join" or "Return to main call"
           document.getElementsByClassName("RveJvd snByac")[x].click() //click on the button
@@ -65,7 +69,7 @@ function meetTools(oldCount) { // Checks current status of Meet.
     }
 
     var newCount = parseInt(document.getElementsByClassName('wnPUne N0PJ8e')[0].innerText) // Find current number of members in meet.
-    if ((newCount < oldCount - 3 || newCount <= oldCount * 0.75) && document.getElementsByClassName("ihVAlc").length < 1 && document.getElementsByClassName("PNenzf").length < 1) { // Autoleave logic: If 4 people or 1/4 of the meet leave, then leave. (If breakout rooms not in session)
+    if (((newCount < oldCount - 3 || newCount <= oldCount * 0.75) && document.getElementsByClassName("ihVAlc").length < 1 && document.getElementsByClassName("PNenzf").length < 1) && autoleave == true) { // Autoleave logic: If 4 people or 1/4 of the meet leave, then leave. (If breakout rooms not in session)
       console.log("Autoleaving...")
       chrome.runtime.sendMessage({ // Tell background script to close tab.
         closeThis: true

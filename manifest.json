@@ -1,6 +1,6 @@
 {
   "name": "Meet Tools",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Semi-automatic Google Meet management",
   "manifest_version": 2,
   "permissions": [

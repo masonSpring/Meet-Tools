@@ -8,6 +8,8 @@ function save_options() {
   var optionsRefreshInterval = document.getElementById('options-refresh-interval').value;
   var optionsHAHook = document.getElementById('options-hahook').value;
   var optionsAutorecord = document.getElementById('options-autorecord').checked;
+  var optionsAutoleave = document.getElementById('options-autoleave').checked;
+  var optionsAutobreakout = document.getElementById('options-autobreakout').checked;
   chrome.storage.sync.set({
     automute: optionsAutomute,
     autojoin: optionsAutojoin,
@@ -17,7 +19,9 @@ function save_options() {
     ping: optionsPing,
     haHook: optionsHAHook,
     refreshInterval: optionsRefreshInterval,
-    autorecord: optionsAutorecord
+    autorecord: optionsAutorecord,
+    autoleave: optionsAutoleave,
+    autobreakout: optionsAutobreakout
   }, function () {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
@@ -40,7 +44,9 @@ function restore_options() {
     webhook: "",
     haHook: "",
     refreshInterval: "15000",
-    autorecord: false
+    autorecord: false,
+    autoleave: true,
+    autobreakout: true
   }, function (items) {
     document.getElementById('options-automute').checked = items.automute;
     document.getElementById('options-autojoin').checked = items.autojoin;
@@ -51,6 +57,8 @@ function restore_options() {
     document.getElementById("options-hahook").value = items.haHook;
     document.getElementById("options-refresh-interval").value = items.refreshInterval;
     document.getElementById("options-autorecord").checked = items.autorecord;
+    document.getElementById('options-autoleave').checked = items.autoleave;
+    document.getElementById('options-autobreakout').checked = items.autobreakout;
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
