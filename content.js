@@ -57,27 +57,26 @@ function meetTools(oldCount) { // Checks current status of Meet.
 
     //check for breakout
     if (document.getElementsByClassName("PNenzf").length > 0) { //if popup box exists
-      for (x = 0; x < document.getElementsByClassName("RveJvd snByac").length; x++){ //Iterates through list of clickable buttons
-                if (document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Join") || document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Return to the main call")) { //if button is "Join" or "Return to main call"
-                    document.getElementsByClassName("RveJvd snByac")[x].click() //click on the button
-                }
+      for (x = 0; x < document.getElementsByClassName("RveJvd snByac").length; x++) { //Iterates through list of clickable buttons
+        if (document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Join") || document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Return to the main call")) { //if button is "Join" or "Return to main call"
+          document.getElementsByClassName("RveJvd snByac")[x].click() //click on the button
         }
       }
+    }
 
-      var newCount = parseInt(document.getElementsByClassName('wnPUne N0PJ8e')[0].innerText) // Find current number of members in meet.
-      if (newCount < oldCount - 3 || newCount <= oldCount * 0.75 && document.getElementsByClassName("ihVAlc").length < 1) { // Autoleave logic: If 4 people or 1/4 of the meet leave, then leave. (If breakout rooms not in session)
-        console.log("Autoleaving...")
-        chrome.runtime.sendMessage({ // Tell background script to close tab.
-          closeThis: true
-        });
-        document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Fallback to click disconnect button if tab does not close.
-      } 
-      else { // It is not time to leave yet.
-        setTimeout(meetTools, 3000, newCount); // Check every 3 seconds.
-      }
+    var newCount = parseInt(document.getElementsByClassName('wnPUne N0PJ8e')[0].innerText) // Find current number of members in meet.
+    if ((newCount < oldCount - 3 || newCount <= oldCount * 0.75) && document.getElementsByClassName("ihVAlc").length < 1 && document.getElementsByClassName("PNenzf").length < 1) { // Autoleave logic: If 4 people or 1/4 of the meet leave, then leave. (If breakout rooms not in session)
+      console.log("Autoleaving...")
+      chrome.runtime.sendMessage({ // Tell background script to close tab.
+        closeThis: true
+      });
+      document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Fallback to click disconnect button if tab does not close.
+    } else { // It is not time to leave yet.
+      setTimeout(meetTools, 3000, newCount); // Check every 3 seconds.
     }
   }
+}
 
-  window.addEventListener('load', function () { // On page load, start main function after 1 second.
-    setTimeout(meetTools, 1000);
-  }, false);
+window.addEventListener('load', function () { // On page load, start main function after 1 second.
+  setTimeout(meetTools, 1000);
+}, false);
