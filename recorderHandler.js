@@ -31,13 +31,19 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     }
   }
   if (message == "muted") {
-    receiver.micEnabled.getAudioTracks()[0].enabled = false;
+    if (receiver != null) {
+      receiver.micEnabled.getAudioTracks()[0].enabled = false;
+    }
   }
   if (message == "unmuted") {
-    receiver.micEnabled.getAudioTracks()[0].enabled = true;
+    if (receiver != null) {
+      receiver.micEnabled.getAudioTracks()[0].enabled = true;
+    }
   }
   if (message == "end") {
-    receiver.shutdownReceiver();
+    if (receiver != null) {
+      receiver.shutdownReceiver();
+    }
   }
   if (message == "download") {
     chrome.downloads.download({
