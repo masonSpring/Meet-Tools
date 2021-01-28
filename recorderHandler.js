@@ -15,6 +15,18 @@ function getFormattedTime() { // Function to add times to filename
   return y + "-" + m + "-" + d + "-" + h + "-" + mi + "-" + s;
 }
 
+function downloadCheck(downloadId) { // Check if download is done.
+  chrome.downloads.search({ // Find download by ID
+    id:downloadId
+  }, function (download) {
+    if (download[0].state != "complete") { // Is download not complete?
+      setTimeout(downloadCheck, 1000, downloadId); // Check again in a second.
+    } else { // Download is complete.
+      URL.revokeObjectURL(receiver.url); // Revoke blob URL.
+    }
+  });
+}
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) { // Message Handler
   if (message.record) { // Ready to record
     if (autorecord) { // Is autorecord enabled?
@@ -52,8 +64,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) { 
     chrome.downloads.download({ // Start download of blob URL as webm.
       url: receiver.url,
       filename: getFormattedTime() + ".webm"
-    });
-    URL.revokeObjectURL(receiver.url); // Revoke blob URL.
+    }, downloadCheck); // Check download status.
   }
 });
 
