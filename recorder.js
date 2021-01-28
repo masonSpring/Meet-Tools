@@ -1,8 +1,8 @@
 function muteCheck() {
   if (document.getElementsByClassName("U26fgb JRY2Pb mUbCce kpROve uJNmj A00RE M9Bg4d HNeRed")[0] != undefined) {
-    chrome.runtime.sendMessage("unmuted");
+    chrome.runtime.sendMessage({unmuted: true});
   } else {
-    chrome.runtime.sendMessage("muted");
+    chrome.runtime.sendMessage({muted: true});
   }
   setTimeout(muteCheck, 1000);
 }

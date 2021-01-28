@@ -25,7 +25,7 @@ function download() {
     type: 'video/webm'
   });
   url = URL.createObjectURL(blob);
-  chrome.runtime.sendMessage("download");
+  chrome.runtime.sendMessage({download: true});
   //window.URL.revokeObjectURL(url);
 }
 
