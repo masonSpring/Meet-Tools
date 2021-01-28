@@ -5,8 +5,16 @@
   "manifest_version": 2,
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "activeTab",
+    "storage",
+    "tabCapture",
+    "downloads"
   ],
+  "background": {
+    "scripts": ["recorderHandler.js"],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": [
@@ -14,13 +22,12 @@
       ],
       "js": [
         "content.js",
-        "captions.js"
+        "captions.js",
+        "recorder.js"
       ]
     }
   ],
-  "browser_action": {
-    "default_popup": "options.html"
-  },
+  "page_action": {},
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false
