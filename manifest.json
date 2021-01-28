@@ -1,6 +1,6 @@
 {
   "name": "Meet Tools",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Semi-automatic Google Meet management",
   "manifest_version": 2,
   "permissions": [
@@ -12,7 +12,7 @@
     "downloads"
   ],
   "background": {
-    "scripts": ["recorderHandler.js"],
+    "scripts": ["background.js", "recorderHandler.js"],
     "persistent": false
   },
   "content_scripts": [
