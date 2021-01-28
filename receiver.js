@@ -29,12 +29,7 @@ function download() {
   //window.URL.revokeObjectURL(url);
 }
 
-
-function shutdownReceiver() {
-  //if (!currentStream) {
-    //return;
-  //}
-
+function tabClose() {
   var player = document.getElementById('player');
   player.srcObject = null;
   var tracks = currentStream.getTracks();
@@ -42,7 +37,15 @@ function shutdownReceiver() {
     tracks[i].stop();
   }
   stream = null;
+}
 
+function shutdownReceiver() {
+  //if (!currentStream) {
+  //return;
+  //}
+  tabClose();
+  
+  
   download();
 }
 
@@ -55,8 +58,8 @@ function play(stream) {
   });
   player.setAttribute('controls', '1');
   player.srcObject = currentStream;
-
-
+  
+  
   mediaRecorder = new MediaRecorder(stream, recordOptions);
   mediaRecorder.ondataavailable = handleDataAvailable;
   mediaRecorder.start(3000);
@@ -80,15 +83,15 @@ window.addEventListener('load', function() {
   // has loaded.
   
   navigator.mediaDevices.getUserMedia({ audio: true }).then((mic) => {
-        micEnabled = mic;
-        window.currentStream.width = screen.width;
-        window.currentStream.height = screen.height;
-        let mixer = new MultiStreamsMixer([window.currentStream, mic]);
-        console.log(mixer.getMixedStream());
-        mixer.frameInterval = 1;
-        mixer.startDrawingFrames();
-        play(mixer.getMixedStream());
+    micEnabled = mic;
+    window.currentStream.width = screen.width;
+    window.currentStream.height = screen.height;
+    let mixer = new MultiStreamsMixer([window.currentStream, mic]);
+    console.log(mixer.getMixedStream());
+    mixer.frameInterval = 1;
+    mixer.startDrawingFrames();
+    play(mixer.getMixedStream());
   });
 });
 // Shutdown when the receiver page is closed.
-window.addEventListener('beforeunload', shutdownReceiver);
+window.addEventListener('beforeunload', tabClose);
