@@ -57,10 +57,9 @@ function meetTools(oldCount) { // Checks current status of Meet.
 
     //check for breakout
     if (document.getElementsByClassName("PNenzf").length > 0) { //if popup box exists
-      for (x = 0; x < document.getElementsByClassName("RveJvd snByac").length; x++){
-        console.log(document.getElementsByClassName("RveJvd snByac")[x].innerText)
-                if (document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Join") || document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Return to the main call")) {
-                    document.getElementsByClassName("RveJvd snByac")[x].click()
+      for (x = 0; x < document.getElementsByClassName("RveJvd snByac").length; x++){ //Iterates through list of clickable buttons
+                if (document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Join") || document.getElementsByClassName("RveJvd snByac")[x].innerText.includes("Return to the main call")) { //if button is "Join" or "Return to main call"
+                    document.getElementsByClassName("RveJvd snByac")[x].click() //click on the button
                 }
         }
       }
@@ -72,8 +71,9 @@ function meetTools(oldCount) { // Checks current status of Meet.
           closeThis: true
         });
         document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Fallback to click disconnect button if tab does not close.
-      } else { // It is not time to leave yet.
-        setTimeout(meetTools, 5000, newCount); // Check every 5 seconds.
+      } 
+      else { // It is not time to leave yet.
+        setTimeout(meetTools, 3000, newCount); // Check every 3 seconds.
       }
     }
   }
