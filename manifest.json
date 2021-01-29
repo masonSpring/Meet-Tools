@@ -31,7 +31,11 @@
       "run_at": "document_end"
     }
   ],
-  "page_action": {},
+  "page_action": {
+    "default_icon": {
+      "48": "icon48.png"
+    }
+  },
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false
