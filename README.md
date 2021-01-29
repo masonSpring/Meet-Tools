@@ -15,6 +15,7 @@ Semi-automatic Google Meet management for Google Chrome:
 ## Recording
 1. If autorecord is disabled you can manually trigger a recording once in an active meet by clicking the extension icon on the top right.
 2. The recorder will open in a new tab. Once the meet is disconected or the tab is closed the recorded meet will be downloaded in `webm` format. To download the file while currently in the meet click `Download Current File`. Not that the file saved at the end of the meeting will still contain the whole meeting.
+* Recorded files are currently not seekable. This is due to a bug in Chrome and multiple workarounds are being attempted.
 
 ## Configure Notifier
 1. Open extension settings.
