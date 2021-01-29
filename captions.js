@@ -11,7 +11,7 @@ chrome.storage.sync.get({ // Get all relevant settings.
   haHook = items.haHook;
   ping = items.ping;
 
-  if (!webhook || !haHook) { // If at least one of the webhooks are set, start caption reader.
+  if (webhook || haHook) { // If at least one of the webhooks are set, start caption reader.
     readCaption();
   }
 });
