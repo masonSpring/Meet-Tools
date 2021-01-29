@@ -1,4 +1,4 @@
-var micEnabled = new MediaStream(); // Set micEnabled variable to be accessible elsewhere.
+var micEnabled; // Set micEnabled variable to be accessible elsewhere.
 var recordedChunks = []; // Create global variable for recording.
 const recordOptions = { mimeType: 'video/webm;codecs=vp9' }; // Set recording to webm.
 var url = ""; // Create global variable for recording URL.
@@ -9,40 +9,12 @@ function handleDataAvailable(event) { // When recorded data is available
   }
 }
 
-// From RecordRTC, makes webm seekable
-function getSeekableBlob(inputBlob, callback) {
-    // EBML.js copyrights goes to: https://github.com/legokichi/ts-ebml
-    if (typeof EBML === 'undefined') {
-        throw new Error('Please link: https://cdn.webrtc-experiment.com/EBML.js');
-    }
-    var reader = new EBML.Reader();
-    var decoder = new EBML.Decoder();
-    var tools = EBML.tools;
-    var fileReader = new FileReader();
-    fileReader.onload = function(e) {
-        var ebmlElms = decoder.decode(this.result);
-        ebmlElms.forEach(function(element) {
-            reader.read(element);
-        });
-        reader.stop();
-        var refinedMetadataBuf = tools.makeMetadataSeekable(reader.metadatas, reader.duration, reader.cues);
-        var body = this.result.slice(reader.metadataSize);
-        var newBlob = new Blob([refinedMetadataBuf, body], {
-            type: 'video/webm'
-        });
-        callback(inputBlob);
-    };
-    fileReader.readAsArrayBuffer(inputBlob);
-}
-
 function download() { // Download file.
   var blob = new Blob(recordedChunks, { // Create webm blob out of all the segments.
     type: 'video/webm'
   });
-  getSeekableBlob(blob, function (blob) {
-    url = URL.createObjectURL(blob); // Create URL for blob.
-    chrome.runtime.sendMessage({ download: true }); // Tell background script to download.
-  });
+  url = URL.createObjectURL(blob); // Create URL for blob.
+  chrome.runtime.sendMessage({ download: true }); // Tell background script to download.
 }
 
 function tabClose() { // Kills streams.
