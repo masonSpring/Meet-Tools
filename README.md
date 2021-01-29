@@ -32,3 +32,8 @@ Semi-automatic Google Meet management for Google Chrome:
 ## Configure Autorecord
 1. Add this extension's ID to the chrome start switch `--whitelisted-extension-id=<EXTENSION ID>`. See [here](https://www.chromium.org/developers/how-tos/run-chromium-with-flags). Depending on OS you may want to add this to your Google Chrome shortcut/start wrapper.
 2. Enable `Autorecord` in extension settings.
+
+## To-do
+* Add Meet Scheduling
+* Fix manual recording quality
+* Fix webm seeking
