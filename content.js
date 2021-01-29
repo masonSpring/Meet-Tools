@@ -14,9 +14,9 @@ chrome.storage.sync.get({ // Get all relevant settings.
 
 function meetTools(oldCount) { // Checks current status of Meet.
   if (document.getElementsByClassName("I98jWb")[0] == undefined) { // Does the "show/hide captions" button not exist? If so, meet is not joined.
-    if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) { // Does the "Refresh" button exist? If so then the meet does not yet exist.
+    if ((document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) || (document.getElementsByClassName("CRFCdf")[0] != undefined)) { // Does the "Refresh" button or "Meet has not started" text exist? If so then the meet does not yet exist.
       setTimeout(function () { // Click the "Refresh" button after waiting a certain amount of time (set in settings).
-        document.getElementsByClassName("VfPpkd-vQzf8d")[0].click();
+        location.reload();
       }, refreshInterval)
     } else { // Meet exists but is not yet joined.
       try {
