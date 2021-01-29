@@ -57,6 +57,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) { 
   }
   if (message.end) { // Meet is over.
     if (receiver != null) { // If receiver page exists.
+      receiver.mediaRecorder.stop();
       receiver.shutdownReceiver(); // Shutdown recording.
     }
   }
