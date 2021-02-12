@@ -20,6 +20,7 @@ function download() { // Download file.
 function tabClose() { // Kills streams.
   var player = document.getElementById('player'); // Get audio player.
   player.srcObject = null; // Unset audio player source.
+  micEnabled.stop(); // Stop recording microphone.
   var tracks = currentStream.getTracks(); // Get all tracks.
   for (var i = 0; i < tracks.length; ++i) { // For all tracks:
     tracks[i].stop(); // Stop track.
