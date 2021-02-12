@@ -14,12 +14,14 @@ chrome.storage.sync.get({ // Get all relevant settings.
 
 function meetTools(oldCount) { // Checks current status of Meet.
   if (document.getElementsByClassName("I98jWb")[0] == undefined) { // Does the "show/hide captions" button not exist? If so, meet is not joined.
-    if ((document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) || (document.getElementsByClassName("CRFCdf")[0] != undefined)) { // Does the "Refresh" button or "Meet has not started" text exist? If so then the meet does not yet exist.
-      if (!document.getElementsByClassName("CRFCdf")[0].innerHTML.includes("You left the meeting")) { // Confirm the user didn't leave the meet manually.
-        setTimeout(function () { // Refresh the page after waiting a certain amount of time (set in settings).
-          location.reload();
-        }, refreshInterval)
-      }
+    if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) { // Does the "Refresh" exist? If so then the meet does not yet exist.
+      setTimeout(function () { // Refresh the page after waiting a certain amount of time (set in settings).
+        location.reload();
+      }, refreshInterval)
+    } else if ((document.getElementsByClassName("CRFCdf")[0] != undefined) && !(document.getElementsByClassName("CRFCdf")[0].innerHTML.includes("You left the meeting"))) { // Does the text for "Meet not started" exist? Also checks to see if user left meet manually.
+      setTimeout(function () { // Refresh the page after waiting a certain amount of time (set in settings).
+        location.reload();
+      }, refreshInterval)
     } else { // Meet exists but is not yet joined.
       try {
 
