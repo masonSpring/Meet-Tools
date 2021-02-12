@@ -15,39 +15,43 @@ chrome.storage.sync.get({ // Get all relevant settings.
 function meetTools(oldCount) { // Checks current status of Meet.
   if (document.getElementsByClassName("I98jWb")[0] == undefined) { // Does the "show/hide captions" button not exist? If so, meet is not joined.
     if ((document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) || (document.getElementsByClassName("CRFCdf")[0] != undefined)) { // Does the "Refresh" button or "Meet has not started" text exist? If so then the meet does not yet exist.
-      setTimeout(function () { // Click the "Refresh" button after waiting a certain amount of time (set in settings).
-        location.reload();
-      }, refreshInterval)
+      if (!document.getElementsByClassName("CRFCdf")[0].innerHTML.includes("You left the meeting")) { // Confirm the user didn't leave the meet manually.
+        setTimeout(function () { // Refresh the page after waiting a certain amount of time (set in settings).
+          location.reload();
+        }, refreshInterval)
+      }
     } else { // Meet exists but is not yet joined.
       try {
 
         let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac"); // Finds the possiblities for a "Join" button.
         joinLoop:
-          for (i = 0; i < possibleJoinButton.length; i++) { // Checks each possibility to see if it is actually a "Join" button.
-            if (possibleJoinButton[i].innerHTML == "Join now") { // Found "Join" button. Join page fully loaded.
+        for (i = 0; i < possibleJoinButton.length; i++) { // Checks each possibility to see if it is actually a "Join" button.
+          if (possibleJoinButton[i].innerHTML == "Join now") { // Found "Join" button. Join page fully loaded.
 
+            if (autojoin) { // Is autojoin enabled?
               chrome.runtime.sendMessage({ // Tell background script to focus tab.
                 focusThis: true
               });
-
-              if (document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find mute button.
-                console.log("Automuting...")
-                document.getElementsByClassName("I5fjHe wb61gb")[0].click() // Click mute button.
-              }
-
-              if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find camera button.
-                console.log("Auto-disabling camera...")
-                document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Click camera button.
-              }
-
-              if (autojoin) { // Is autojoin enabled?
-                console.log("Autojoining...")
-                possibleJoinButton[i].click(); // Click join button.
-              }
-
-              break joinLoop; // Don't keep looking for buttons.
             }
+
+            if (document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find mute button.
+              console.log("Automuting...")
+              document.getElementsByClassName("I5fjHe wb61gb")[0].click() // Click mute button.
+            }
+
+            if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find camera button.
+              console.log("Auto-disabling camera...")
+              document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Click camera button.
+            }
+
+            if (autojoin) { // Is autojoin enabled?
+              console.log("Autojoining...")
+              possibleJoinButton[i].click(); // Click join button.
+            }
+
+            break joinLoop; // Don't keep looking for buttons.
           }
+        }
         setTimeout(meetTools, 1000) // No join button found or autojoin is disabled, recheck in a second.
       } catch (error) {
         setTimeout(meetTools, 1000);
