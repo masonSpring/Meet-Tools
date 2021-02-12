@@ -27,7 +27,7 @@ function downloadCheck(downloadId) { // Check if download is done.
   });
 }
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) { // Message Handler
+chrome.runtime.onMessage.addListener(function (message, sender) { // Message Handler
   if (message.record) { // Ready to record
     if (autorecord) { // Is autorecord enabled?
       chrome.tabs.highlight({ 'tabs': sender.tab.index }); // Highlight tab before recording.
