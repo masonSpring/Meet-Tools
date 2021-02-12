@@ -4,7 +4,7 @@ function muteCheck() { // Check if user is muted or not.
   } else { // "Mute" button does not exist.
     chrome.runtime.sendMessage({ muted: true }); // Tell recorderHandler that user is muted.
   }
-  setTimeout(muteCheck, 1000); // Check every second.
+  setTimeout(muteCheck, 250); // Check every quarter of a second.
 }
 
 function endCheck() { // Check to see if meet is disconnected.
