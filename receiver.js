@@ -1,23 +1,23 @@
 var micEnabled; // Set micEnabled variable to be accessible elsewhere.
 var recordedChunks = []; // Create global variable for recording.
-const recordOptions = { mimeType: 'video/webm;codecs=vp9' }; // Set recording to webm.
+var mediaRecorder; // Create global variable for media recorder.
+const recordOptions = { type: 'video', timeSlice: 1000 }; // Set recording options to save every second.
 var url = ""; // Create global variable for recording URL.
 
-function handleDataAvailable(event) { // When recorded data is available
-  if (event.data.size > 0) { // If data is more than 0:
-    recordedChunks.push(event.data);  // Add data to recorded chunks.
-  }
-}
-
 function download() { // Download file.
-  var blob = new Blob(recordedChunks, { // Create webm blob out of all the segments.
-    type: 'video/webm'
+  if (mediaRecorder.getState() != "recording") { // Is the media recorder done recording?
+    var blob = mediaRecorder.getBlob(); // Use built-in function to get blob.
+  } else { // Partial download while still recording.
+    var blob = new Blob(mediaRecorder.getInternalRecorder().getArrayOfBlobs(), {type: 'video/webm'}); // Create blob using partially recorded data.
+  }
+  getSeekableBlob(blob, function(seekableBlob) { // Get seekable blob.
+    url = URL.createObjectURL(seekableBlob); // Create URL for blob.
+    chrome.runtime.sendMessage({ download: true }); // Tell background script to download.
   });
-  url = URL.createObjectURL(blob); // Create URL for blob.
-  chrome.runtime.sendMessage({ download: true }); // Tell background script to download.
 }
 
-function tabClose() { // Kills streams.
+function end() { // Meet is over, finish recording.
+  mediaRecorder.stopRecording(download); // Stop recording and call download function.
   var player = document.getElementById('player'); // Get audio player.
   player.srcObject = null; // Unset audio player source.
   micEnabled.stop(); // Stop recording microphone.
@@ -26,11 +26,6 @@ function tabClose() { // Kills streams.
     tracks[i].stop(); // Stop track.
   }
   stream = null; // Kill stream.
-}
-
-function shutdownReceiver() { // Shutdown recording.
-  tabClose(); // Kill streams.
-  download(); // Download file.
 }
 
 function play(stream) { // Play stream.
@@ -42,18 +37,15 @@ function play(stream) { // Play stream.
   });
   player.setAttribute('controls', '1'); // Enable player controls.
   player.srcObject = currentStream; // Set player to play audio stream from meet.
-
-  mediaRecorder = new MediaRecorder(stream, recordOptions); // Create recorder object.
-  mediaRecorder.ondataavailable = handleDataAvailable; // Set recorder data handler function.
-  mediaRecorder.start(3000); // Start recording while saving to data handler function every 3 seconds.
+  mediaRecorder = RecordRTC(stream, recordOptions); // Create recorder.
+  mediaRecorder.startRecording(); // Start recording.
   document.getElementById("download").addEventListener("click", function () { // When download button is clicked:
     download(); // Download.
   });
   var tracks = currentStream.getTracks(); // Get all streams from meet.
   for (var i = 0; i < tracks.length; ++i) { // For each stream:
     tracks[i].addEventListener('ended', function () { // When stream ends:
-      mediaRecorder.stop(); // Stop recording.
-      shutdownReceiver(); // Start recorder shutdown process.
+      end(); // Start recorder shutdown process.
     });
   }
 }
@@ -70,4 +62,4 @@ window.addEventListener('load', function () { // When this page loads:
   });
 });
 
-window.addEventListener('beforeunload', tabClose); // When page is closed, kill all streams.
+window.addEventListener('beforeunload', close); // When page is closed, kill all streams.

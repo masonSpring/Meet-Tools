@@ -30,6 +30,7 @@ function downloadCheck(downloadId) { // Check if download is done.
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) { // Message Handler
   if (message.record) { // Ready to record
     if (autorecord) { // Is autorecord enabled?
+      chrome.tabs.highlight({ 'tabs': sender.tab.index }); // Highlight tab before recording.
       record(); // Start recording.
     } else {
       chrome.pageAction.show(sender.tab.id); // Active pageAction on Meet Tab
@@ -57,8 +58,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) { 
   }
   if (message.end) { // Meet is over.
     if (receiver != null) { // If receiver page exists.
-      receiver.mediaRecorder.stop();
-      receiver.shutdownReceiver(); // Shutdown recording.
+      receiver.end(); // Shutdown recording.
     }
   }
   if (message.download) { // Download file.
