@@ -35,6 +35,8 @@ function meetTools(oldCount) { // Checks current status of Meet.
                 focusThis: true
               });
             }
+            
+            document.getElementsByClassName("VfPpkd-RLmnJb")[0].click() //temp fix
 
             if (document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find mute button.
               console.log("Automuting...")
