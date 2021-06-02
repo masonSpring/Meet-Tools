@@ -24,7 +24,6 @@ function meetTools(oldCount) { // Checks current status of Meet.
       }, refreshInterval)
     } else { // Meet exists but is not yet joined.
       try {
-
         let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac"); // Finds the possiblities for a "Join" button.
         joinLoop:
         for (i = 0; i < possibleJoinButton.length; i++) { // Checks each possibility to see if it is actually a "Join" button.
@@ -35,8 +34,6 @@ function meetTools(oldCount) { // Checks current status of Meet.
                 focusThis: true
               });
             }
-            
-            document.getElementsByClassName("VfPpkd-RLmnJb")[0].click() //temp fix
 
             if (document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find mute button.
               console.log("Automuting...")
