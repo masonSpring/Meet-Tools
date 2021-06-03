@@ -14,6 +14,7 @@ chrome.storage.sync.get({ // Get all relevant settings.
 
 function meetTools(oldCount) { // Checks current status of Meet.
   if (document.getElementsByClassName("VfPpkd-Bz112c-LgbsSe fzRBVc tmJved xHd4Cb rmHNDe Qr8aE")[0] == undefined) { // Does the "show/hide captions" button not exist? If so, meet is not joined. (updated for new UI)
+    document.getElementsByClassName("FayWyb")[0].remove() // Remove prompt for old UI
     if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) { // Does the "Refresh" exist? If so then the meet does not yet exist. (same for new UI)
       setTimeout(function () { // Refresh the page after waiting a certain amount of time (set in settings).
         location.reload();
