@@ -24,12 +24,8 @@ function meetTools(oldCount) { // Checks current status of Meet.
       }, refreshInterval)
     } else { // Meet exists but is not yet joined.
       try {
-<<<<<<< HEAD
-        let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac"); // Finds the possiblities for a "Join" button.
-=======
 
         let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac"); // Finds the possiblities for a "Join" button. (same for new UI)
->>>>>>> 59b1d15 (Partial update for new UI)
         joinLoop:
         for (i = 0; i < possibleJoinButton.length; i++) { // Checks each possibility to see if it is actually a "Join" button.
           if (possibleJoinButton[i].innerHTML == "Join now") { // Found "Join" button. Join page fully loaded.
