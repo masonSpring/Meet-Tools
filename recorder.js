@@ -1,5 +1,5 @@
 function muteCheck() { // Check if user is muted or not.
-  if (document.getElementsByClassName("U26fgb JRY2Pb mUbCce kpROve uJNmj A00RE M9Bg4d HNeRed")[0] != undefined) { // Does "Mute" button exist?
+  if (document.getElementsByClassName("VfPpkd-Bz112c-LgbsSe yHy1rc eT1oJ tWDL4c uaILN Wsh1sb qIiG8c HNeRed")[0] != undefined) { // Does "Mute" button exist? (updated for new UI)
     chrome.runtime.sendMessage({ unmuted: true }); // Tell recorderHandler that user is unmuted.
   } else { // "Mute" button does not exist.
     chrome.runtime.sendMessage({ muted: true }); // Tell recorderHandler that user is muted.
@@ -8,7 +8,7 @@ function muteCheck() { // Check if user is muted or not.
 }
 
 function endCheck() { // Check to see if meet is disconnected.
-  if (document.getElementsByClassName("CRFCdf")[0] != undefined) { // Check for meet end text.
+  if (document.getElementsByClassName("roSPhc")[0] != undefined) { // Check for meet end text. (updated for new UI)
     chrome.runtime.sendMessage({ end: true }); // Tell recorderHandler that meet is over.
     checkForMeet(); // Start checking for meet again.
   } else {
@@ -17,7 +17,7 @@ function endCheck() { // Check to see if meet is disconnected.
 }
 
 function checkForMeet() { // Check to see if meet is active.
-  if (document.getElementsByClassName("I98jWb")[0] != undefined) { // Does caption button exist?
+  if (document.getElementsByClassName("VfPpkd-Bz112c-LgbsSe fzRBVc tmJved xHd4Cb rmHNDe Qr8aE")[0] != undefined) { // Does caption button exist? (updated for new UI)
     chrome.runtime.sendMessage({ record: true }); // Start recording.
     muteCheck(); // Start checking for mute status.
     endCheck(); // Start checking for meet end status.
