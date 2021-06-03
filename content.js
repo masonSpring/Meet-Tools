@@ -13,18 +13,23 @@ chrome.storage.sync.get({ // Get all relevant settings.
 });
 
 function meetTools(oldCount) { // Checks current status of Meet.
-  if (document.getElementsByClassName("I98jWb")[0] == undefined) { // Does the "show/hide captions" button not exist? If so, meet is not joined.
-    if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) { // Does the "Refresh" exist? If so then the meet does not yet exist.
+  if (document.getElementsByClassName("VfPpkd-Bz112c-LgbsSe fzRBVc tmJved xHd4Cb rmHNDe Qr8aE")[0] == undefined) { // Does the "show/hide captions" button not exist? If so, meet is not joined. (updated for new UI)
+    if (document.getElementsByClassName("VfPpkd-vQzf8d")[0] != undefined) { // Does the "Refresh" exist? If so then the meet does not yet exist. (same for new UI)
       setTimeout(function () { // Refresh the page after waiting a certain amount of time (set in settings).
         location.reload();
       }, refreshInterval)
-    } else if ((document.getElementsByClassName("CRFCdf")[0] != undefined) && !(document.getElementsByClassName("CRFCdf")[0].innerHTML.includes("You left the meeting"))) { // Does the text for "Meet not started" exist? Also checks to see if user left meet manually.
+    } else if ((document.getElementsByClassName("CRFCdf")[0] != undefined) && !(document.getElementsByClassName("roSPhc")[0].innerHTML.includes("You left the meeting"))) { // Does the text for "Meet not started" exist? Also checks to see if user left meet manually. (second class updated)
       setTimeout(function () { // Refresh the page after waiting a certain amount of time (set in settings).
         location.reload();
       }, refreshInterval)
     } else { // Meet exists but is not yet joined.
       try {
+<<<<<<< HEAD
         let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac"); // Finds the possiblities for a "Join" button.
+=======
+
+        let possibleJoinButton = document.getElementsByClassName("NPEfkd RveJvd snByac"); // Finds the possiblities for a "Join" button. (same for new UI)
+>>>>>>> 59b1d15 (Partial update for new UI)
         joinLoop:
         for (i = 0; i < possibleJoinButton.length; i++) { // Checks each possibility to see if it is actually a "Join" button.
           if (possibleJoinButton[i].innerHTML == "Join now") { // Found "Join" button. Join page fully loaded.
@@ -35,14 +40,14 @@ function meetTools(oldCount) { // Checks current status of Meet.
               });
             }
 
-            if (document.getElementsByClassName("sUZ4id")[0].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find mute button.
+            if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find mute button. (same for new UI)
               console.log("Automuting...")
-              document.getElementsByClassName("I5fjHe wb61gb")[0].click() // Click mute button.
+              document.getElementsByClassName("I5fjHe wb61gb")[0].click() // Click mute button. (same for new UI)
             }
 
-            if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find camera button.
+            if (document.getElementsByClassName("sUZ4id")[1].innerHTML.includes("Turn on") == false && automute == true) { // Is automute enabled? Find camera button. (same for new UI)
               console.log("Auto-disabling camera...")
-              document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Click camera button.
+              document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Click camera button. (same for new UI)
             }
 
             if (autojoin) { // Is autojoin enabled?
@@ -59,9 +64,9 @@ function meetTools(oldCount) { // Checks current status of Meet.
       }
     }
   } else { // Meet is active.
-    if (document.getElementsByClassName("I98jWb")[0].innerText != "Turn off captions") { // Find button to turn on captions.
+    if (document.getElementsByClassName("Q8K3Le")[0].innerHTML.includes("Turn on captions")) { // Find button to turn on captions. (updated for new UI)
       console.log("Auto enabling captions...")
-      document.getElementsByClassName("I98jWb")[0].click() // Turn on captions.
+      document.getElementsByClassName("VfPpkd-Bz112c-LgbsSe fzRBVc tmJved xHd4Cb rmHNDe Qr8aE")[0].click() // Turn on captions. (updated for new UI)
     }
 
     //check for breakout
@@ -73,13 +78,13 @@ function meetTools(oldCount) { // Checks current status of Meet.
       }
     }
 
-    var newCount = parseInt(document.getElementsByClassName('wnPUne N0PJ8e')[0].innerText) // Find current number of members in meet.
+    var newCount = parseInt(document.getElementsByClassName('uGOf1d')[0].innerText) // Get current person count (updated for new UI)
     if (((newCount < oldCount - 3 || newCount <= oldCount * 0.75) && document.getElementsByClassName("ihVAlc").length < 1 && document.getElementsByClassName("PNenzf").length < 1) && autoleave == true) { // Autoleave logic: If 4 people or 1/4 of the meet leave, then leave. (If breakout rooms not in session)
       console.log("Autoleaving...")
       chrome.runtime.sendMessage({ // Tell background script to close tab.
         closeThis: true
       });
-      document.getElementsByClassName("I5fjHe wb61gb")[1].click() // Fallback to click disconnect button if tab does not close.
+      document.getElementsByClassName("VfPpkd-Bz112c-LgbsSe yHy1rc eT1oJ tWDL4c jh0Tpd Gt6sbf QQrMi ftJPW")[0].click() // Fallback to click disconnect button if tab does not close.
     } else { // It is not time to leave yet.
       setTimeout(meetTools, 3000, newCount); // Check every 3 seconds.
     }

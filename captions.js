@@ -20,7 +20,7 @@ function readCaption(oldCaption) { // Checks captions for included words.
   if (oldCaption == undefined) { // If oldCaption is not defined, define it to avoid errors.
     var oldCaption;
   }
-  let captionArr = document.getElementsByClassName('CNusmb'); // Find captions.
+  let captionArr = document.getElementsByClassName('CNusmb'); // Find captions. (same for new UI)
   let caption = "";
   for (let x = 0; x < captionArr.length; x += 1) { // For each line of caption, add to whole string.
     caption += captionArr[x].innerText + " ";
@@ -50,7 +50,7 @@ function readCaption(oldCaption) { // Checks captions for included words.
             "description": caption
           };
 
-          let params = { // Set message details.
+          let params = { // Set message details. (same for new UI)
             "content": "<@" + ping + ">",
             embeds: [captionEmbed],
             username: document.getElementsByClassName('zs7s8d jxFHg')[document.getElementsByClassName('zs7s8d jxFHg').length - 1].innerText,
